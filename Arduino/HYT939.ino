@@ -35,14 +35,16 @@ void loop()
   // humidity msb, humidity lsb, temp msb, temp lsb
   if(Wire.available() == 4)
   {
-    int hMSB = Wire.read();
-    int hLSB = Wire.read();
-    int tMSB = Wire.read();
-    int tLSB = Wire.read();
-
+    int MSB = Wire.read();
+    int LSB = Wire.read();
+    
     // Convert the data to 14-bits
-    float humidity = (((hMSB & 0x3F) * 256.0) +  hLSB) * (100.0 / 16383.0);
-    float cTemp = (((tMSB * 256.0) + (tLSB & 0xFC)) / 4) * (165.0 / 16383.0) - 40;
+    float humidity = (((MSB & 0x3F) * 256.0) +  LSB) * (100.0 / 16383.0);
+    
+    MSB = Wire.read();
+    LSB = Wire.read();
+
+    float cTemp = (((MSB * 256.0) + (LSB & 0xFC)) / 4) * (165.0 / 16383.0) - 40;
     float fTemp = (cTemp * 1.8) + 32;
 
     // Output data to serial monitor
