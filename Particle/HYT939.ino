@@ -14,9 +14,9 @@ float humidity = 0, cTemp = 0, fTemp = 0;
 void setup() 
 {
     // Set variable
-    Particle.variable("i2cdevice", "SHT31");
+    Particle.variable("i2cdevice", "HYT939");
     Particle.variable("cTemp", cTemp);
-  Particle.variable("humidity", humidity);
+    Particle.variable("humidity", humidity);
   
     // Initialise I2C communication as MASTER 
     Wire.begin();
@@ -27,11 +27,12 @@ void setup()
 
 void loop() 
 {
-    // Begin transmission with given device on I2C bus
+    unsigned int data[4];
+    // Start I2C transmission
     Wire.beginTransmission(Addr);
     // Send normal mode command  
     Wire.write(0x80);
-    // Stop I2C transmission on the device
+    // Stop I2C transmission
     Wire.endTransmission();
     delay(300);
   
@@ -42,18 +43,16 @@ void loop()
     // humidity msb, humidity lsb, temp msb, temp lsb
     if(Wire.available() == 4)
     {
-        int MSB = Wire.read();
-        int LSB = Wire.read();
+        data[0] = Wire.read();
+        data[1] = Wire.read();
+        data[2] = Wire.read();
+        data[3] = Wire.read();
         
+        delay(300);
         // Convert the data to 14-bits
-        humidity = (((MSB & 0x3F)  256.0) +  LSB)  (100.0 / 16383.0);
-        
-        MSB = Wire.read();
-        LSB = Wire.read();
-        
-        // Convert the data to 14-bits
-        cTemp = (((MSB  256.0) + (LSB & 0xFC)) / 4)  (165.0 / 16383.0) - 40;
-        fTemp = (cTemp * 1.8) + 32;
+        float humidity = (((data[0] & 0x3F) * 256.0) +  data[1]) * (100.0 / 16383.0);
+        float cTemp = (((data[2] * 256.0) + (data[3] & 0xFC)) / 4) * (165.0 / 16383.0) - 40;
+        float fTemp = (cTemp * 1.8) + 32;
         
         // Output data to dashboard
         Particle.publish("Relative Humidity is      :  ", humidity);
