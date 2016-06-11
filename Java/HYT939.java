@@ -33,8 +33,8 @@ public class HYT939
 		double fTemp = (cTemp * 1.8 ) + 32;
 
 		// Output data to screen
-		System.out.printf("Relative Humidity is : %.2f %%RH %n", Humidity);
+		System.out.printf("Relative Humidity is : %.2f %%RH %n", humidity);
 		System.out.printf("Temperature in Celsius is : %.2f C %n", cTemp);
-		System.out.printf("Temperature in Farhenheit is : %.2f F %n", fTemp);
+		System.out.printf("Temperature in Fahrenheit is : %.2f F %n", fTemp);
 	}
 }
