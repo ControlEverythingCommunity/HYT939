@@ -57,7 +57,7 @@ void loop()
         // Output data to dashboard
         Particle.publish("Relative Humidity is      :  ", humidity);
         Particle.publish("Temperature in Celsius    :  ", cTemp);
-        Particle.publish("Temperature in Farhenheit :  ", fTemp);
+        Particle.publish("Temperature in Fahrenheit :  ", fTemp);
     }
 }
 
