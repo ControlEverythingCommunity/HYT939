@@ -58,5 +58,6 @@ void loop()
         Particle.publish("Relative Humidity is      :  ", String(humidity));
         Particle.publish("Temperature in Celsius    :  ", String(cTemp));
         Particle.publish("Temperature in Fahrenheit :  ", String(fTemp));
+        delay(1000);
     }
 }
