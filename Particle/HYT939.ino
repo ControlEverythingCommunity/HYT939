@@ -10,7 +10,7 @@
 // HYT939 I2C address is 0x28(40)
 #define Addr 0x28
 
-float humidity = 0.0, cTemp = 0.0, fTemp = 0.0;
+double humidity = 0.0, cTemp = 0.0, fTemp = 0.0;
 void setup() 
 {
     // Set variable
@@ -47,17 +47,18 @@ void loop()
         data[1] = Wire.read();
         data[2] = Wire.read();
         data[3] = Wire.read();
+    }    
+    
+    // Convert the data to 14-bits
+    humidity = (((data[0] & 0x3F) * 256.0) +  data[1]) * (100.0 / 16383.0);
+    cTemp = (((data[2] * 256.0) + (data[3] & 0xFC)) / 4) * (165.0 / 16383.0) - 40;
+    fTemp = (cTemp * 1.8) + 32;
         
-        delay(300);
-        // Convert the data to 14-bits
-        humidity = (((data[0] & 0x3F) * 256.0) +  data[1]) * (100.0 / 16383.0);
-        cTemp = (((data[2] * 256.0) + (data[3] & 0xFC)) / 4) * (165.0 / 16383.0) - 40;
-        fTemp = (cTemp * 1.8) + 32;
-        
-        // Output data to dashboard
-        Particle.publish("Relative Humidity is      :  ", String(humidity));
-        Particle.publish("Temperature in Celsius    :  ", String(cTemp));
-        Particle.publish("Temperature in Fahrenheit :  ", String(fTemp));
-        delay(1000);
-    }
+    // Output data to dashboard
+    Particle.publish("Relative Humidity is      :  ", String(humidity));
+    delay(1000);
+    Particle.publish("Temperature in Celsius    :  ", String(cTemp));
+    delay(1000);
+    Particle.publish("Temperature in Fahrenheit :  ", String(fTemp));
+    delay(1000);
 }
