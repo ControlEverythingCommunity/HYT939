@@ -41,12 +41,13 @@ void main()
 		// Convert the data
 		int hum = ((data[0] & 0x3F)* 256 + (data[1] & 0xFF));
 		int temp = ((data[2] & 0xFF)* 256 + (data[3] & 0xFC)) / 4;
-        double humidity = (hum) * (100.0 / 16383.0);
+        	double humidity = (hum) * (100.0 / 16383.0);
 		double cTemp = (temp) * (165.0 / 16383.0) - 40;
 		double fTemp = (cTemp * 1.8 ) + 32;
 		
-		printf("Pressure : %.2f PSI \n", pressure);
-		printf("Temperature in Celsius : %.2f C \n", cTemp);
-		printf("Temperature in Fahrenheit : %.2f F \n", fTemp);
+		// Output data to screen
+		printf("Temprature in Celsius : %.2f C \n", cTemp);
+		printf("Temprature in Feharenheit : %.2f F \n", fTemp);
+		printf("Relative humidity is : %.2f RH \n", humidity);
 	}
 }
