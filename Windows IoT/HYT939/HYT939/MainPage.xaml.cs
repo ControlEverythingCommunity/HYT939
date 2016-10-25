@@ -19,8 +19,8 @@ namespace HYT939
 
     public sealed partial class MainPage : Page
     {
-        private const byte HUMTEMP_I2C_ADDR = 0x28;           //	I2C address of the HYT939
-        private const byte HUMTEMP_REG_HUMIDITY = 0x00;              //	Humidity data register
+        private const byte HUMTEMP_I2C_ADDR = 0x28;		// I2C address of the HYT939
+        private const byte HUMTEMP_REG_HUMIDITY = 0x00;        	// Humidity data register
 
 
         private I2cDevice I2CHumtemp;
@@ -30,17 +30,17 @@ namespace HYT939
         {
             this.InitializeComponent();
 
-            //	Register for the unloaded event so we can clean up upon exit
+            // Register for the unloaded event so we can clean up upon exit
             Unloaded += MainPage_Unloaded;
 
-            //	Initialize the I2C bus, Humidity and Temperature Sensor, and timer
+            // Initialize the I2C bus, Humidity and Temperature Sensor, and timer
             InitI2CHumtemp();
         }
 
         private async void InitI2CHumtemp()
         {
-            string aqs = I2cDevice.GetDeviceSelector();             //	Get a selector string that will return all I2C controllers on the system
-            var dis = await DeviceInformation.FindAllAsync(aqs);    //	Find the I2C bus controller device with our selector string
+            string aqs = I2cDevice.GetDeviceSelector();             // Get a selector string that will return all I2C controllers on the system
+            var dis = await DeviceInformation.FindAllAsync(aqs);    // Find the I2C bus controller device with our selector string
             if (dis.Count == 0)
             {
                 Text_Status.Text = "No I2C controllers were found on the system";
@@ -61,11 +61,11 @@ namespace HYT939
             }
 
             /*
-				Initialize the Humidity and Temperature Sensor
-				For this device, we create 1-byte write buffer
-				The byte is the content that we want to write to
-			*/
-            byte[] WriteBuf_ComByte = new byte[] { 0x80 };          //	0x80 Ends Command Mode and transits to Normal Operation Mode
+		Initialize the Humidity and Temperature Sensor
+		For this device, we create 1-byte write buffer
+		The byte is the content that we want to write to
+	    */
+            byte[] WriteBuf_ComByte = new byte[] { 0x80 };          // 0x80 Ends Command Mode and transits to Normal Operation Mode
 
             //	Write the register settings
             try
@@ -79,13 +79,13 @@ namespace HYT939
                 return;
             }
 
-            //	Create a timer to read data every 100ms
+            // Create a timer to read data every 100ms
             periodicTimer = new Timer(this.TimerCallback, null, 0, 100);
         }
 
         private void MainPage_Unloaded(object sender, object args)
         {
-            //	Cleanup
+            // Cleanup
             I2CHumtemp.Dispose();
         }
 
@@ -94,7 +94,7 @@ namespace HYT939
             string rhText, cText, fText;
             string addressText, statusText;
 
-            //	Read and format Humidity and Temperature data
+            // Read and format Humidity and Temperature data
             try
             {
                 HumdTemp HUMTEMP = ReadI2CHumtemp();
@@ -112,7 +112,7 @@ namespace HYT939
                 statusText = "Failed to read from Humidity and Temperature Sensor: " + ex.Message;
             }
 
-            //	UI updates must be invoked on the UI thread
+            // UI updates must be invoked on the UI thread
             var task = this.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
             {
                 Text_Relative_Humidity.Text = rhText;
@@ -124,17 +124,17 @@ namespace HYT939
 
         private HumdTemp ReadI2CHumtemp()
         {
-            byte[] RegAddrBuf = new byte[] { HUMTEMP_REG_HUMIDITY };     //	Read data from the register address
-            byte[] ReadBuf = new byte[4];                       //	We read 4 bytes sequentially to get all 2 two-byte humidity and temperature registers in one read
+            byte[] RegAddrBuf = new byte[] { HUMTEMP_REG_HUMIDITY };    // Read data from the register address
+            byte[] ReadBuf = new byte[4];                       	// We read 4 bytes sequentially to get all 2 two-byte humidity and temperature registers in one read
 
             /*
-				Read from the Humidity and Temperature Sensor 
-				We call WriteRead() so we first write the address of the Relative Humidity I2C register, then read Temperature data
-				register
-			*/
+		Read from the Humidity and Temperature Sensor 
+		We call WriteRead() so we first write the address of the Relative Humidity I2C register, then read Temperature data
+		register
+	    */
             I2CHumtemp.WriteRead(RegAddrBuf, ReadBuf);
 
-	    // In order to get the raw 16-bit data values, we need to concatenate two 8-bit bytes from the I2C read for each axis.
+	    // In order to get the raw 16-bit data values, we need to concatenate two 8-bit bytes from the I2C read.
             ushort HUMTEMPRawRH = (ushort)((ReadBuf[0] & 0x3F) * 256);
             HUMTEMPRawRH |= (ushort)(ReadBuf[1] & 0xFF);
             ushort HUMTEMPRawC = (ushort)((ReadBuf[2] & 0xFF) * 256);
