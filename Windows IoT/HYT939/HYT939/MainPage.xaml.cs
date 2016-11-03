@@ -99,9 +99,9 @@ namespace HYT939
             {
                 HumdTemp HUMTEMP = ReadI2CHumtemp();
                 addressText = "I2C Address of the Humidity and Temperature Sensor HYT939: 0x28";
-                rhText = String.Format("Relative Humidity (%RH): {0:F2}", HUMTEMP.RH);
-                cText = String.Format("Temperature in Celsius (°C): {0:F2}", HUMTEMP.C);
-                fText = String.Format("Temperature in Fahrenheit (°F): {0:F2}", HUMTEMP.F);
+                rhText = String.Format("Relative Humidity: {0:F2} %RH", HUMTEMP.RH);
+                cText = String.Format("Temperature in Celsius: {0:F2} °C", HUMTEMP.C);
+                fText = String.Format("Temperature in Fahrenheit: {0:F2} °F", HUMTEMP.F);
                 statusText = "Status: Running";
             }
             catch (Exception ex)
