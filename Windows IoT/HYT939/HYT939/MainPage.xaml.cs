@@ -138,7 +138,7 @@ namespace HYT939
             ushort HUMTEMPRawRH = (ushort)((ReadBuf[0] & 0x3F) * 256);
             HUMTEMPRawRH |= (ushort)(ReadBuf[1] & 0xFF);
             ushort HUMTEMPRawC = (ushort)((ReadBuf[2] & 0xFF) * 256);
-            HUMTEMPRawRH |= (ushort)(ReadBuf[3] & 0xFC);
+            HUMTEMPRawC |= (ushort)(ReadBuf[3] & 0xFC);
 
             // Conversions using formulas provided
             double humidity = (HUMTEMPRawRH * (100.0 / 16383.0));
