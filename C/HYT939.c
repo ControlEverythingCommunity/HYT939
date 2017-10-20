@@ -27,7 +27,7 @@ void main()
 	char config[1] = {0};
 	config[0] = 0x80;
 	write(file, config, 1);
-	sleep(0.5);
+	usleep(100000);
 	
 	// Read 4 bytes of data
 	// humidity msb, humidity lsb, temp msb, temp lsb
