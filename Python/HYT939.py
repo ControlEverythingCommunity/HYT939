@@ -14,7 +14,7 @@ bus = smbus.SMBus(1)
 #		0x80(128)	Send normal mode
 bus.write_byte(0x28, 0x80)
 
-time.sleep(0.5)
+time.sleep(0.1)
 
 # HYT939 address, 0x28(40)
 # Read data back from 0x00(00), 4 bytes
